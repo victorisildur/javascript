@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>simple MVVM</title>
+    <!--script src="js/pubsub.js"></script-->
+    <script src="js/myPubSub.js"></script>
+  </head>
+  <body isi-controller="MainController">
+    <script type="text/javascript">
+      var myModel;
+      window.onload = function() {
+      myModel = new Model;
+      myModel.set( "name", "isildur" );
+      myModel.set( "score", 100);
+      }
+    </script>
+    <input type="text" data-bind="name">
+    <input type="number" data-bind="score">
+    <div isi-controller="SubController">
+      <input type="text" data-bind="name">
+    </div>
+  </body>
+</html>

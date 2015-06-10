@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>simple MVVM</title>
+    <script src="js/ParentController.js"></script>
+    <script src="js/SubController.js"></script>
+    <script src="js/frame_v2.js"></script>
+  </head>
+  <body isi-controller="ParentController">
+    <input type="text" data-bind="name">
+    <div isi-controller="SubController">
+      <input type="text" data-bind="name">
+    </div>
+  </body>
+</html>
