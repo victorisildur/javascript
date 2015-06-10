@@ -1,9 +1,9 @@
 # javascript
-Simple mvvm frame: 
+Extremely simple mvvm frame , only has 1000 lines!
 
-A very straightforward mvvm framework, 
+Very straightforward mvvm completion, 
 
-combining angular's controller defination and knockout's model defination
+Combining angular's controller defination , Knockout's model defination
 
 Design thoughts in Chinese: 
 
