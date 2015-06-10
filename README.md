@@ -1,5 +1,5 @@
 # javascript
-Extremely simple mvvm frame , only has 1000 lines!
+Extremely simple mvvm frame , only has 100 lines!
 
 Very straightforward mvvm completion, 
 
