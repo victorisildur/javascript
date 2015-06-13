@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>avalon like mvvm framework</title>
+    <script src="frame.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body isi-controller="MainController">
+    <h1> avalon like mvvm framework </h1>
+    <div id="my-box" style="background:#f33;width:100px;height:100px;"></div>
+    <p id="my-p">{{width}}</p>
+  </body>
+</html>
