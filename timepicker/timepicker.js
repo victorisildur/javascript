@@ -51,7 +51,7 @@ $.fn.timePicker = function(callback) {
                 step = remainder / 4;
                 $(this).data('isTailing', true);
                 // 反向进坑
-                if (remainder < (timeItemHeight / 2)) {
+                if (remainder > (timeItemHeight / 2)) {
                     remainder = timeItemHeight - remainder;
                     step = -1 * remainder / 4;
                 }
