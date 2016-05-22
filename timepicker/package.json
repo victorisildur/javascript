@@ -1,0 +1,15 @@
+{
+  "name": "zepto-timepicker",
+  "version": "0.0.1",
+  "description": "A scroll-bar interactive timepicker",
+  "main": "timepicker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/victorisildur/javascript.git"
+  },
+  "author": "victorisildur",
+  "license": "MIT"
+}
