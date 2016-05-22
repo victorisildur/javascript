@@ -1,5 +1,4 @@
-# javascript
-Project 1: Simple Mvvm
+#Project 1: Simple Mvvm
 
 Extremely simple mvvm frame , only has 100 lines!
 
@@ -11,7 +10,7 @@ Design thoughts in Chinese:
 
 http://blog.csdn.net/vctisildur/article/details/46422347
 
-Project 2: Avalon Like Mvvm
+#Project 2: Avalon Like Mvvm
 
 A greatly simplified avalon like mvvm, only 240 lines!
 
@@ -24,3 +23,10 @@ ScanTag() find bindings, aquire binding's evaluator, handler, and register bindi
 Design thoughts in Chinese:
 
 http://blog.csdn.net/vctisildur/article/details/46454755
+
+#Project 3: zepto timepicker plugin
+
+A scrolling timepicker, different from state-of-art select based timepicker.
+Can be used both with zepto or jquery.
+
+
