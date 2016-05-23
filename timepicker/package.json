@@ -1,6 +1,6 @@
 {
   "name": "zepto-timepicker",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "A scroll-bar interactive timepicker",
   "main": "dist/timepicker.js",
   "scripts": {

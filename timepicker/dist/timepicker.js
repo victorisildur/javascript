@@ -55,10 +55,12 @@
 	        negBtn = timer.find('.js-neg-btn'),
 	        posBtn = timer.find('.js-pos-btn'),
 	        timeColContainer = timer.find('.time-col-container'),
-	        timeItemHeight = timer.find('.hour-col ul li').first().height();
+	        timeItemHeight = 0;
 
 	    this.on('focus', function(e) {
 	        timer.show();
+	        timeItemHeight = timer.find('.hour-col ul li').first().height();
+	        console.debug('timeItemHeight:' + timeItemHeight);
 	        e.preventDefault();
 	    });
 	    
@@ -180,7 +182,7 @@
 
 
 	// module
-	exports.push([module.id, ".timepicker {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.1);\n}\n.timepicker .tp-dialog {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 300px;\n  height: 180px;\n  /* 50*3 + 30*/\n  margin-left: -150px;\n  margin-top: -90px;\n  background-color: rgba(0, 0, 0, 0.95);\n}\n.timepicker .tp-dialog .tp-content {\n  position: absolute;\n  top: 0;\n  bottom: 30px;\n  width: 100%;\n}\n.timepicker .tp-dialog .tp-content .time-col-container {\n  position: absolute;\n  width: 50%;\n  height: 100%;\n  box-sizing: border-box;\n  overflow: auto;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  font-size: 40px;\n  color: white;\n  text-align: center;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col li {\n  height: 50px;\n  line-height: 50px;\n  box-sizing: border-box;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.hour-col {\n  left: 0;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.min-col {\n  left: 50%;\n}\n.timepicker .tp-dialog .tp-content .time-line {\n  position: absolute;\n  display: block;\n  width: 40%;\n  height: 5px;\n  background-color: #12b7f5;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-left {\n  left: 5%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-right {\n  left: 55%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-top {\n  top: 45px;\n  /* 50-5 */\n}\n.timepicker .tp-dialog .tp-content .time-line.is-bottom {\n  top: 100px;\n  /* 100 */\n}\n.timepicker .tp-dialog .tp-op {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  height: 30px;\n}\n.timepicker .tp-dialog .tp-op .op {\n  display: inline-block;\n  width: 50%;\n  height: 100%;\n  line-height: 30px;\n  box-sizing: border-box;\n  text-align: center;\n  border-top: 1px solid white;\n  color: white;\n}\n", ""]);
+	exports.push([module.id, ".timepicker {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  display: none;\n  background-color: rgba(0, 0, 0, 0.1);\n}\n.timepicker .tp-dialog {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 300px;\n  height: 180px;\n  /* 50*3 + 30*/\n  margin-left: -150px;\n  margin-top: -90px;\n  background-color: rgba(0, 0, 0, 0.95);\n}\n.timepicker .tp-dialog .tp-content {\n  position: absolute;\n  top: 0;\n  bottom: 30px;\n  width: 100%;\n}\n.timepicker .tp-dialog .tp-content .time-col-container {\n  position: absolute;\n  width: 50%;\n  height: 100%;\n  box-sizing: border-box;\n  overflow: auto;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  font-size: 40px;\n  color: white;\n  text-align: center;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col li {\n  height: 50px;\n  line-height: 50px;\n  box-sizing: border-box;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.hour-col {\n  left: 0;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.min-col {\n  left: 50%;\n}\n.timepicker .tp-dialog .tp-content .time-line {\n  position: absolute;\n  display: block;\n  width: 40%;\n  height: 5px;\n  background-color: #12b7f5;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-left {\n  left: 5%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-right {\n  left: 55%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-top {\n  top: 45px;\n  /* 50-5 */\n}\n.timepicker .tp-dialog .tp-content .time-line.is-bottom {\n  top: 100px;\n  /* 100 */\n}\n.timepicker .tp-dialog .tp-op {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  height: 30px;\n}\n.timepicker .tp-dialog .tp-op .op {\n  display: inline-block;\n  width: 50%;\n  height: 100%;\n  line-height: 30px;\n  box-sizing: border-box;\n  text-align: center;\n  border-top: 1px solid white;\n  color: white;\n}\n", ""]);
 
 	// exports
 
