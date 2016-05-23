@@ -133,6 +133,15 @@
 	                    step = -1 * remainder / 4;
 	                }
 	            }
+	            
+	            // calc hour, min from this.scrollTop
+	            var val = Math.round((this.scrollTop + step*4)/itemHeight);
+	            if (timeColContainer.hasClass('hour-col')) {
+	                timer.data('hour', val);
+	            } else {
+	                timer.data('min', val);
+	            }
+
 	            console.debug("auto-pitting begins, remainder:" + remainder + ", scrollTop:" + this.scrollTop + ', step: ' + step);
 	            // auto-pitting
 	            intervalId = window.setInterval(function() {
@@ -141,12 +150,6 @@
 	                if (remainder <= 0) {
 	                    console.debug("auto-pitting ends, item height:" + itemHeight + ", scrollTop:" + this.scrollTop + ', setp: ' + step);
 	                    window.clearInterval(intervalId);
-	                    // calc hour, min from this.scrollTop
-	                    if (timeColContainer.hasClass('hour-col')) {
-	                        timer.data('hour', Math.round(this.scrollTop/itemHeight));
-	                    } else {
-	                        timer.data('min', Math.round(this.scrollTop/itemHeight));
-	                    }
 	                    window.setTimeout(function() {
 	                        timeColContainer.data('isTailing', false);
 	                    }.bind(this), 150);
