@@ -1,5 +1,6 @@
 $.fn.timePicker = function(callback) {
-    var timer = $('.timepicker'),
+    var $this = this,
+        timer = $('.timepicker'),
         negBtn = timer.find('.js-neg-btn'),
         posBtn = timer.find('.js-pos-btn'),
         timeColContainer = timer.find('.time-col-container'),
@@ -15,9 +16,7 @@ $.fn.timePicker = function(callback) {
         if ($(this).data('isTailing')) {
             return;
         }
-
-        var scrollTop = this.scrollTop;
-
+        // 判断滚动方向
         if ($(this).data('lastScroll') < this.scrollTop) {
             $(this).data('scrollDir', 'down');
         } else {
@@ -29,10 +28,9 @@ $.fn.timePicker = function(callback) {
         if ($(this).data('timerId'))
             window.clearTimeout($(this).data('timerId'));
 
-        // 设置定时器
+        // 设置定时器, 100ms未滚动才真正执行
         $(this).data('timerId', window.setTimeout(function() {
-            // 100ms未滚动，真正执行：scrollTop设为数字高度的整倍数
-            if (scrollTop % timeItemHeight === 0)
+            if (this.scrollTop % timeItemHeight === 0)
                 return;
             var remainder = 0,
                 intervalId = 0,
@@ -64,6 +62,12 @@ $.fn.timePicker = function(callback) {
                 if (remainder <= 0) {
                     console.debug("自动进坑结束, item height:" + timeItemHeight + ", scrollTop:" + this.scrollTop + ', setp: ' + step);
                     window.clearInterval(intervalId);
+                    // 设置小时、分钟
+                    if ($(this).hasClass('hour-col')) {
+                        $this.data('hour', Math.round(this.scrollTop/timeItemHeight));
+                    } else {
+                        $this.data('min', Math.round(this.scrollTop/timeItemHeight));
+                    }
                     window.setTimeout(function() {
                         $(this).data('isTailing', false);
                     }.bind(this), 150);
@@ -76,9 +80,9 @@ $.fn.timePicker = function(callback) {
         timer.hide();
     });
     posBtn.on('click', function() {
-        var val1 = timeColContainer[0].scrollTop,
-            val2 = timeColContainer[1].scrollTop;
-        callback(val1, val2);
+        var hour = $this.data('hour'),
+            min = $this.data('min');
+        callback(hour, min);
         timer.hide();
     });
 };

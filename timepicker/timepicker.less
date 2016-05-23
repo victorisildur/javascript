@@ -21,10 +21,10 @@ body {
         top: 50%;
         left: 50%;
         width: 300px;
-        height: 200px;
+        height: 180px; /* 50*3 + 30*/
         margin-left: -150px;
-        margin-top: -100px;
-        background-color: #000;
+        margin-top: -90px;
+        background-color: rgba(0,0,0,0.95);
 
         .tp-content {
             position: absolute;
@@ -44,9 +44,14 @@ body {
                     padding: 0;
                     margin: 0;
 
-                    font-size: 3.5em;
+                    font-size: 40px;
                     color: white;
                     text-align: center;
+                    li {
+                        height: 50px;
+                        line-height: 50px;
+                        box-sizing: border-box;
+                    }
                 }
                 &.hour-col {
                     left: 0;
@@ -69,10 +74,10 @@ body {
                     left: 55%;
                 }
                 &.is-top {
-                    top: 40%;
+                    top: 45px; /* 50-5 */
                 }
                 &.is-bottom {
-                    top: 70%;
+                    top: 100px; /* 100 */
                 }
             }
         }
@@ -85,10 +90,11 @@ body {
                 display: inline-block;
                 width: 50%;
                 height: 100%;
+                line-height: 30px;
                 box-sizing: border-box;
                 
                 text-align: center;
-                border: 1px solid white;
+                border-top: 1px solid white;
                 color: white;
             }
         }

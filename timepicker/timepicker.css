@@ -21,10 +21,11 @@ body {
   top: 50%;
   left: 50%;
   width: 300px;
-  height: 200px;
+  height: 180px;
+  /* 50*3 + 30*/
   margin-left: -150px;
-  margin-top: -100px;
-  background-color: #000;
+  margin-top: -90px;
+  background-color: rgba(0, 0, 0, 0.95);
 }
 .timepicker .tp-dialog .tp-content {
   position: absolute;
@@ -43,9 +44,14 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 3.5em;
+  font-size: 40px;
   color: white;
   text-align: center;
+}
+.timepicker .tp-dialog .tp-content .time-col-container .time-col li {
+  height: 50px;
+  line-height: 50px;
+  box-sizing: border-box;
 }
 .timepicker .tp-dialog .tp-content .time-col-container.hour-col {
   left: 0;
@@ -67,10 +73,12 @@ body {
   left: 55%;
 }
 .timepicker .tp-dialog .tp-content .time-line.is-top {
-  top: 40%;
+  top: 45px;
+  /* 50-5 */
 }
 .timepicker .tp-dialog .tp-content .time-line.is-bottom {
-  top: 70%;
+  top: 100px;
+  /* 100 */
 }
 .timepicker .tp-dialog .tp-op {
   position: absolute;
@@ -82,8 +90,9 @@ body {
   display: inline-block;
   width: 50%;
   height: 100%;
+  line-height: 30px;
   box-sizing: border-box;
   text-align: center;
-  border: 1px solid white;
+  border-top: 1px solid white;
   color: white;
 }
