@@ -9,14 +9,21 @@ $('#timepicker').timePicker(function(hour, min) {
     /* Callback when you click positive button.
        Now do whatever you want with hour and minutes!
      */
+     console.debug('selected hour:min is %s:%s', hour, min);
 });
 ```
 
+Yes, that's all!
+No css is required because they are built in by webpack.
+
+It's webpack, browserify compatible, the plugin only depends on '$'.
+
 # Prerequisites
 
-    * body should be 100% width and height, and its position is not static
-    * phone width be greater than 300px
+* zepto.js
+* body should be 100% width and height, and its position shall not be static
+* phone width be greater than 300px
 
 # Comments
 
-Not so fast, it's not completed, and I'll try to make the 1.0.0 version today.
+Sorry for no pictures and demos, coming soon.
