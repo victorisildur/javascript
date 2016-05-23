@@ -2,7 +2,9 @@ var timerHtml = require('../html/timepicker.html'),
     timerStyle = require('../less/timepicker.less');
 
 $.fn.timePicker = function(callback) {
-    $('body').append(timerHtml);
+    if ($('body').find('.js-timepicker').length === 0) {
+        $('body').append(timerHtml);
+    }
     
     var $this = this,
         timer = $('.js-timepicker'),
@@ -11,7 +13,7 @@ $.fn.timePicker = function(callback) {
         timeColContainer = timer.find('.time-col-container'),
         timeItemHeight = 0;
 
-    this.on('focus', function(e) {
+    this.on('click', function(e) {
         timer.show();
         timeItemHeight = timer.find('.hour-col ul li').first().height();
         console.debug('timeItemHeight:' + timeItemHeight);

@@ -27,3 +27,5 @@ It's webpack, browserify compatible, the plugin only depends on '$'.
 # Comments
 
 Sorry for no pictures and demos, coming soon.
+
+However, $ needs to be a global symbol now, so it has some problem with webpack.
