@@ -1,6 +1,11 @@
+var timerHtml = require('../html/timepicker.html'),
+    timerStyle = require('../less/timepicker.less');
+
 $.fn.timePicker = function(callback) {
+    $('body').append(timerHtml);
+    
     var $this = this,
-        timer = $('.timepicker'),
+        timer = $('.js-timepicker'),
         negBtn = timer.find('.js-neg-btn'),
         posBtn = timer.find('.js-pos-btn'),
         timeColContainer = timer.find('.time-col-container'),
@@ -86,7 +91,3 @@ $.fn.timePicker = function(callback) {
         timer.hide();
     });
 };
-
-$('#picker').timePicker(function(val1, val2) {
-    console.debug('timepicker最终值：%s, %s', val1, val2);
-});
