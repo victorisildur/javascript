@@ -1,65 +1,89 @@
 var timerHtml = require('../html/timepicker.html'),
     timerStyle = require('../less/timepicker.less');
 
+
+var clickedComponent = null;
+
 $.fn.timePicker = function(callback) {
+    var shallBindEvt = false;
     if ($('body').find('.js-timepicker').length === 0) {
         $('body').append(timerHtml);
+        shallBindEvt = true;
     }
     
-    var $this = this,
-        timer = $('.js-timepicker'),
+    var timer = $('.js-timepicker'),
         negBtn = timer.find('.js-neg-btn'),
         posBtn = timer.find('.js-pos-btn'),
-        timeColContainer = timer.find('.time-col-container'),
-        timeItemHeight = 0;
+        timeColContainers = timer.find('.time-col-container'),
+        itemHeight = 0;
 
+
+    this.data('callback', callback);
+    
     this.on('click', function(e) {
         timer.show();
-        timeItemHeight = timer.find('.hour-col ul li').first().height();
-        console.debug('timeItemHeight:' + timeItemHeight);
+        if (!timer.data('itemHeight'))
+            timer.data('itemHeight', timer.find('.hour-col ul li').first().height());
+        clickedComponent = $(this);
         e.preventDefault();
     });
     
-    timeColContainer.on('scroll', function(e) {
+    if (!shallBindEvt) {
+        return;
+    }
+    
+    timer.data('hour', 0);
+    timer.data('min', 0);
+    posBtn.on('click', function() {
+        var hour = timer.data('hour'),
+            min = timer.data('min');
+        clickedComponent.data('callback')(hour, min);
+        timer.hide();
+    });
+
+    
+    timeColContainers.on('scroll', function(e) {
+        var timeColContainer = $(this);
         // if container is auto-pitting
-        if ($(this).data('isTailing')) {
+        if (timeColContainer.data('isTailing')) {
             return;
         }
         // set the scrolling direction
-        if ($(this).data('lastScroll') < this.scrollTop) {
-            $(this).data('scrollDir', 'down');
+        if (timeColContainer.data('lastScroll') < this.scrollTop) {
+            timeColContainer.data('scrollDir', 'down');
         } else {
-            $(this).data('scrollDir', 'up');
+            timeColContainer.data('scrollDir', 'up');
         }
-        $(this).data('lastScroll', this.scrollTop);
+        timeColContainer.data('lastScroll', this.scrollTop);
         
         // clear the timer if scrolled in 100ms
-        if ($(this).data('timerId'))
-            window.clearTimeout($(this).data('timerId'));
+        if (timeColContainer.data('timerId'))
+            window.clearTimeout(timeColContainer.data('timerId'));
 
         // set the timer, it'll only run when there is no scroll event in 100ms
-        $(this).data('timerId', window.setTimeout(function() {
-            if (this.scrollTop % timeItemHeight === 0)
-                return;
+        timeColContainer.data('timerId', window.setTimeout(function() {
             var remainder = 0,
                 intervalId = 0,
-                step = 0;
-            if ($(this).data('scrollDir') === 'up') {
-                remainder = this.scrollTop % timeItemHeight;
+                step = 0,
+                itemHeight = timer.data('itemHeight');
+            if (this.scrollTop % itemHeight === 0)
+                return;
+            if (timeColContainer.data('scrollDir') === 'up') {
+                remainder = this.scrollTop % itemHeight;
                 step = -1 * remainder / 4;
                 // reversely auto-pitting
-                if (remainder > (timeItemHeight / 2)) {
-                    remainder = timeItemHeight - remainder;
+                if (remainder > (itemHeight / 2)) {
+                    remainder = itemHeight - remainder;
                     step = remainder / 4;
                 }
-                $(this).data('isTailing', true);
+                timeColContainer.data('isTailing', true);
             } else {
-                remainder = timeItemHeight - (this.scrollTop % timeItemHeight);
+                remainder = itemHeight - (this.scrollTop % itemHeight);
                 step = remainder / 4;
-                $(this).data('isTailing', true);
+                timeColContainer.data('isTailing', true);
                 // reversely auto-pitting
-                if (remainder > (timeItemHeight / 2)) {
-                    remainder = timeItemHeight - remainder;
+                if (remainder > (itemHeight / 2)) {
+                    remainder = itemHeight - remainder;
                     step = -1 * remainder / 4;
                 }
             }
@@ -69,20 +93,19 @@ $.fn.timePicker = function(callback) {
                 this.scrollTop = (this.scrollTop + step);
                 remainder = remainder - Math.abs(step);
                 if (remainder <= 0) {
-                    console.debug("auto-pitting ends, item height:" + timeItemHeight + ", scrollTop:" + this.scrollTop + ', setp: ' + step);
+                    console.debug("auto-pitting ends, item height:" + itemHeight + ", scrollTop:" + this.scrollTop + ', setp: ' + step);
                     window.clearInterval(intervalId);
                     // calc hour, min from this.scrollTop
-                    if ($(this).hasClass('hour-col')) {
-                        $this.data('hour', Math.round(this.scrollTop/timeItemHeight));
+                    if (timeColContainer.hasClass('hour-col')) {
+                        timer.data('hour', Math.round(this.scrollTop/itemHeight));
                     } else {
-                        $this.data('min', Math.round(this.scrollTop/timeItemHeight));
+                        timer.data('min', Math.round(this.scrollTop/itemHeight));
                     }
                     window.setTimeout(function() {
-                        $(this).data('isTailing', false);
+                        timeColContainer.data('isTailing', false);
                     }.bind(this), 150);
                 }
             }.bind(this), 100);
-
         }.bind(this), 100));
     });
     
@@ -90,10 +113,4 @@ $.fn.timePicker = function(callback) {
         timer.hide();
     });
     
-    posBtn.on('click', function() {
-        var hour = $this.data('hour'),
-            min = $this.data('min');
-        callback(hour, min);
-        timer.hide();
-    });
 };

@@ -47,63 +47,89 @@
 	var timerHtml = __webpack_require__(1),
 	    timerStyle = __webpack_require__(2);
 
+
+	var clickedComponent = null;
+
 	$.fn.timePicker = function(callback) {
-	    $('body').append(timerHtml);
+	    var shallBindEvt = false;
+	    if ($('body').find('.js-timepicker').length === 0) {
+	        $('body').append(timerHtml);
+	        shallBindEvt = true;
+	    }
 	    
-	    var $this = this,
-	        timer = $('.js-timepicker'),
+	    var timer = $('.js-timepicker'),
 	        negBtn = timer.find('.js-neg-btn'),
 	        posBtn = timer.find('.js-pos-btn'),
-	        timeColContainer = timer.find('.time-col-container'),
-	        timeItemHeight = 0;
+	        timeColContainers = timer.find('.time-col-container'),
+	        itemHeight = 0;
 
+
+	    this.data('callback', callback);
+	    
 	    this.on('click', function(e) {
 	        timer.show();
-	        timeItemHeight = timer.find('.hour-col ul li').first().height();
-	        console.debug('timeItemHeight:' + timeItemHeight);
+	        if (!timer.data('itemHeight'))
+	            timer.data('itemHeight', timer.find('.hour-col ul li').first().height());
+	        clickedComponent = $(this);
 	        e.preventDefault();
 	    });
 	    
-	    timeColContainer.on('scroll', function(e) {
+	    if (!shallBindEvt) {
+	        return;
+	    }
+	    
+	    timer.data('hour', 0);
+	    timer.data('min', 0);
+	    posBtn.on('click', function() {
+	        var hour = timer.data('hour'),
+	            min = timer.data('min');
+	        clickedComponent.data('callback')(hour, min);
+	        timer.hide();
+	    });
+
+	    
+	    timeColContainers.on('scroll', function(e) {
+	        var timeColContainer = $(this);
 	        // if container is auto-pitting
-	        if ($(this).data('isTailing')) {
+	        if (timeColContainer.data('isTailing')) {
 	            return;
 	        }
 	        // set the scrolling direction
-	        if ($(this).data('lastScroll') < this.scrollTop) {
-	            $(this).data('scrollDir', 'down');
+	        if (timeColContainer.data('lastScroll') < this.scrollTop) {
+	            timeColContainer.data('scrollDir', 'down');
 	        } else {
-	            $(this).data('scrollDir', 'up');
+	            timeColContainer.data('scrollDir', 'up');
 	        }
-	        $(this).data('lastScroll', this.scrollTop);
+	        timeColContainer.data('lastScroll', this.scrollTop);
 	        
 	        // clear the timer if scrolled in 100ms
-	        if ($(this).data('timerId'))
-	            window.clearTimeout($(this).data('timerId'));
+	        if (timeColContainer.data('timerId'))
+	            window.clearTimeout(timeColContainer.data('timerId'));
 
 	        // set the timer, it'll only run when there is no scroll event in 100ms
-	        $(this).data('timerId', window.setTimeout(function() {
-	            if (this.scrollTop % timeItemHeight === 0)
-	                return;
+	        timeColContainer.data('timerId', window.setTimeout(function() {
 	            var remainder = 0,
 	                intervalId = 0,
-	                step = 0;
-	            if ($(this).data('scrollDir') === 'up') {
-	                remainder = this.scrollTop % timeItemHeight;
+	                step = 0,
+	                itemHeight = timer.data('itemHeight');
+	            if (this.scrollTop % itemHeight === 0)
+	                return;
+	            if (timeColContainer.data('scrollDir') === 'up') {
+	                remainder = this.scrollTop % itemHeight;
 	                step = -1 * remainder / 4;
 	                // reversely auto-pitting
-	                if (remainder > (timeItemHeight / 2)) {
-	                    remainder = timeItemHeight - remainder;
+	                if (remainder > (itemHeight / 2)) {
+	                    remainder = itemHeight - remainder;
 	                    step = remainder / 4;
 	                }
-	                $(this).data('isTailing', true);
+	                timeColContainer.data('isTailing', true);
 	            } else {
-	                remainder = timeItemHeight - (this.scrollTop % timeItemHeight);
+	                remainder = itemHeight - (this.scrollTop % itemHeight);
 	                step = remainder / 4;
-	                $(this).data('isTailing', true);
+	                timeColContainer.data('isTailing', true);
 	                // reversely auto-pitting
-	                if (remainder > (timeItemHeight / 2)) {
-	                    remainder = timeItemHeight - remainder;
+	                if (remainder > (itemHeight / 2)) {
+	                    remainder = itemHeight - remainder;
 	                    step = -1 * remainder / 4;
 	                }
 	            }
@@ -113,20 +139,19 @@
 	                this.scrollTop = (this.scrollTop + step);
 	                remainder = remainder - Math.abs(step);
 	                if (remainder <= 0) {
-	                    console.debug("auto-pitting ends, item height:" + timeItemHeight + ", scrollTop:" + this.scrollTop + ', setp: ' + step);
+	                    console.debug("auto-pitting ends, item height:" + itemHeight + ", scrollTop:" + this.scrollTop + ', setp: ' + step);
 	                    window.clearInterval(intervalId);
 	                    // calc hour, min from this.scrollTop
-	                    if ($(this).hasClass('hour-col')) {
-	                        $this.data('hour', Math.round(this.scrollTop/timeItemHeight));
+	                    if (timeColContainer.hasClass('hour-col')) {
+	                        timer.data('hour', Math.round(this.scrollTop/itemHeight));
 	                    } else {
-	                        $this.data('min', Math.round(this.scrollTop/timeItemHeight));
+	                        timer.data('min', Math.round(this.scrollTop/itemHeight));
 	                    }
 	                    window.setTimeout(function() {
-	                        $(this).data('isTailing', false);
+	                        timeColContainer.data('isTailing', false);
 	                    }.bind(this), 150);
 	                }
 	            }.bind(this), 100);
-
 	        }.bind(this), 100));
 	    });
 	    
@@ -134,12 +159,6 @@
 	        timer.hide();
 	    });
 	    
-	    posBtn.on('click', function() {
-	        var hour = $this.data('hour'),
-	            min = $this.data('min');
-	        callback(hour, min);
-	        timer.hide();
-	    });
 	};
 
 
@@ -184,7 +203,7 @@
 
 
 	// module
-	exports.push([module.id, ".timepicker {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  display: none;\n  background-color: rgba(0, 0, 0, 0.1);\n}\n.timepicker .tp-dialog {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 300px;\n  height: 180px;\n  /* 50*3 + 30*/\n  margin-left: -150px;\n  margin-top: -90px;\n  background-color: rgba(0, 0, 0, 0.95);\n}\n.timepicker .tp-dialog .tp-content {\n  position: absolute;\n  top: 0;\n  bottom: 30px;\n  width: 100%;\n}\n.timepicker .tp-dialog .tp-content .time-col-container {\n  position: absolute;\n  width: 50%;\n  height: 100%;\n  box-sizing: border-box;\n  overflow: auto;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  font-size: 40px;\n  color: white;\n  text-align: center;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col li {\n  height: 50px;\n  line-height: 50px;\n  box-sizing: border-box;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.hour-col {\n  left: 0;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.min-col {\n  left: 50%;\n}\n.timepicker .tp-dialog .tp-content .time-line {\n  position: absolute;\n  display: block;\n  width: 40%;\n  height: 5px;\n  background-color: #12b7f5;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-left {\n  left: 5%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-right {\n  left: 55%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-top {\n  top: 45px;\n  /* 50-5 */\n}\n.timepicker .tp-dialog .tp-content .time-line.is-bottom {\n  top: 100px;\n  /* 100 */\n}\n.timepicker .tp-dialog .tp-op {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  height: 30px;\n}\n.timepicker .tp-dialog .tp-op .op {\n  display: inline-block;\n  width: 50%;\n  height: 100%;\n  line-height: 30px;\n  box-sizing: border-box;\n  text-align: center;\n  border-top: 1px solid white;\n  color: white;\n}\n", ""]);
+	exports.push([module.id, ".timepicker {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  display: none;\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.timepicker .tp-dialog {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 300px;\n  height: 180px;\n  /* 50*3 + 30*/\n  margin-left: -150px;\n  margin-top: -90px;\n  background-color: rgba(0, 0, 0, 0.95);\n}\n.timepicker .tp-dialog .tp-content {\n  position: absolute;\n  top: 0;\n  bottom: 30px;\n  width: 100%;\n}\n.timepicker .tp-dialog .tp-content .time-col-container {\n  position: absolute;\n  width: 50%;\n  height: 100%;\n  box-sizing: border-box;\n  overflow: auto;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  font-size: 40px;\n  color: white;\n  text-align: center;\n}\n.timepicker .tp-dialog .tp-content .time-col-container .time-col li {\n  height: 50px;\n  line-height: 50px;\n  box-sizing: border-box;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.hour-col {\n  left: 0;\n}\n.timepicker .tp-dialog .tp-content .time-col-container.min-col {\n  left: 50%;\n}\n.timepicker .tp-dialog .tp-content .time-line {\n  position: absolute;\n  display: block;\n  width: 40%;\n  height: 5px;\n  background-color: #12b7f5;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-left {\n  left: 5%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-right {\n  left: 55%;\n}\n.timepicker .tp-dialog .tp-content .time-line.is-top {\n  top: 45px;\n  /* 50-5 */\n}\n.timepicker .tp-dialog .tp-content .time-line.is-bottom {\n  top: 100px;\n  /* 100 */\n}\n.timepicker .tp-dialog .tp-op {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  height: 30px;\n}\n.timepicker .tp-dialog .tp-op .op {\n  display: inline-block;\n  width: 50%;\n  height: 100%;\n  line-height: 30px;\n  box-sizing: border-box;\n  text-align: center;\n  border-top: 1px solid #ccc;\n  color: white;\n}\n", ""]);
 
 	// exports
 

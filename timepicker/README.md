@@ -21,6 +21,7 @@ It's webpack, browserify compatible, the plugin only depends on '$'.
 # Prerequisites
 
 * zepto.js
+* zepto.js data module
 * body should be 100% width and height, and its position shall not be static
 * phone width be greater than 300px
 
